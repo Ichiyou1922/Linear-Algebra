@@ -7,9 +7,17 @@ typedef struct {
   double **data; //m[i][j]と書ける．*dataだとdata[i * cols +j].
 } Matrix;
 
+void free_matrix(Matrix *m) {
+  for (int i = 0; i < m->rows; i++) {
+    free(m->data[i]);
+  }
+  free(m->data);
+  free(m);
+}
+
 Matrix *create_matrix(int rows, int cols) { //返す構造体は1つ-> *は1つ
   // Matrix * 型１つ分malloc
-  Matrix *new_matrix = (Matrix *)malloc(rows * sizeof(Matrix));
+  Matrix *new_matrix = (Matrix *)malloc(sizeof(Matrix));
   if (new_matrix == NULL) {
     printf("Failed to allocate structure memory\n");
     exit(1);
@@ -21,7 +29,7 @@ Matrix *create_matrix(int rows, int cols) { //返す構造体は1つ-> *は1つ
   // 行を作る．double * 型がrows個入る配列をmalloc(確保)
   new_matrix->data = (double **)malloc(rows * sizeof(double*));
   if (new_matrix->data == NULL) {
-    free(new_matrix);
+    free_matrix(new_matrix);
     printf("Failed to allocate rows memory\n");
   }
   // 列を作る．double 型がcols個入る配列をcalloc(確保して初期化)
@@ -29,20 +37,12 @@ Matrix *create_matrix(int rows, int cols) { //返す構造体は1つ-> *は1つ
     new_matrix->data[i] = (double *)calloc(cols, sizeof(double));
     if (new_matrix->data[i] == NULL) {
       printf("Failed to allocate cols memory\n");
-      free(new_matrix);
+      free_matrix(new_matrix);
     }
   }
 
   
   return new_matrix;
-}
-
-void free_matrix(Matrix *m) {
-  for (int i = 0; i < m->rows; i++) {
-    free(m->data[i]);
-  }
-  free(m->data);
-  free(m);
 }
 
 void print_matrix(Matrix *m) {
