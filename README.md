@@ -71,7 +71,7 @@ y_{i}=\sum_{j=1}^{n}\mathbf{A_{ij}}x_{j} \\qquad (i=1,...,m)
 ## 固有値問題
 - 行列 $\mathbf{A}$ があるベクトル $\mathbf{x}$ に作用したとき，その方向を変えず，長さだけを $\lambda$ 倍するとき， $\mathbf{x}$ を**固有ベクトル(Eigenvector)**, $\lambda$ を**固有値(Eigenvalue)**と呼ぶ．
 ```math
-\mathbf{A}\mathbf{x} = \lambda \mathbf{x} \qudad (\mathbf{x}\neq 0)
+\mathbf{A}\mathbf{x} = \lambda \mathbf{x} \quad (\mathbf{x}\neq 0)
 ```
 - 振動解析: 固有値は固有振動数に対応->共振対策に使用
 - 主成分分析: データが最もばらついている方向を見つける
@@ -88,3 +88,59 @@ y_{i}=\sum_{j=1}^{n}\mathbf{A_{ij}}x_{j} \\qquad (i=1,...,m)
 3. 収束判定: $\mu_{k}-\mu_{k-1} < ε$ で終了．
 
 - $\mu$ が最大固有値 $\lambda_{max}$ , $\mathbf{v}$ がその固有ベクトルに対応．
+#### もう少し詳しく
+- $n\times n$ 行列 $A$ がn個の線形独立な固有ベクトル $\mathbf{s}_{1}, ... , \mathbf{x}_{n}$ を持ち，その固有値を $\lambda_{1}, ... , \lambda_{n}$ で表す．これは絶対値の大きさ順に並んでいるとしよう．
+```math
+|\lambda_{1}| > |\lambda_{2}| > \dots > |\lambda_{n}|
+```
+- $\lambda_{1}$ は最大固有値である．
+1. 初期ベクトル $\mathbf{v}^{0}$ :
+- これは基底である固有ベクトルの線形結合で表せる．
+```math
+\mathbf{v}^{(0)}=c_{1}\mathbf{x}_{1}+ \dots + c_{n}\mathbf{x}_{n}
+```
+2. Aを1回掛ける
+```math
+\begin{equation}
+\mathbf{v}^{(1)}=\mathbf{A}\mathbf{v}^{(0)}=c_{1}\mathbf{A}\mathbf{x}_{1} + \dots + c_{n}\mathbf{A}\mathbf{x}_{n}
+&=c_{1}\lambda_{1}\mathbf{x}_{1} + \dots + c_{n}\lambda_{n}\mathbf{x}_{n}
+\end{equation}
+```
+3. k回繰り返す
+```math
+\mathbf{v}^{(k)} = \mathbf{A}^{k}\mathbf{v}^{(0)}=c_{1}\lambda_{1}^{k}\mathbf{x}_{1} + \dots + c_{n}\lambda_{n}^{k}\mathbf{x}_{n}
+```
+4. 式全体を $\lambda_{1}^{k}$ でくくる<-最強
+```math
+\mathbf{v}^{k} = \lambda_{1}^{k}\lbrace c_{1}\mathbf{x}_{1}+
+c_{2}(\frac{\lambda_{2}}{\lambda_{1}})^{k}\mathbf{x}_{2}+ \dots +
+c_{n}(\frac{\lambda_{n}}{\lambda_{1}})^{k}\mathbf{x}_{n}
+```
+- $|frac{\lambda_{i}}{\lambda_{1}}|< 1 $ だから，何乗もしていくと0に近づく．
+```math
+\mathbf{v}^{(k)}\approx \lambda_{1}^kc_{1}\mathbf{x}_{1}
+```
+- ベクトルは $\mathbf{x_{1}}$ の方向を向く．
+
+#### レイリー商(Rayleigh Quotient)とは
+- 固有ベクトル $\mathbf{x}$ から固有値 $\lambda$ を逆算するための式．
+
+```math
+\lambda=\frac{\mathbf{x}^{T}\mathbf{A}\mathbf{x}}{\mathbf{x}^{T}\mathbf{x}}
+```
+
+- なぜ内積の商？
+  - $\maathbf{A}\mathbf{x}=\lambda\mathbf{x}$ を見ると，$\mathbf{x}$ と $\mathbf{A}\mathbf{x}$ は同じ向き->長さの比を取れば良さそう...だけどベクトル同士の割り算は定義されてない...
+  - 両辺 $\mathbf{x}$ の内積を取ろう．
+```math
+\mathbf{x}^{T}(\mathbf{A}\mathbf{x})=\mathbf{x}^{T}(\lambda\mathbf{x})
+```
+```math
+\mathbf{x}^{T}\mathbf{A}\mathbf{x}=\lambda(\mathbf{x}^{T}\mathbf{x})
+```
+- 右辺にスカラーがあるから割ると...
+```math
+\lambda=frac{\mathbf{x}^{T}\mathbf{A}\mathbf{x}}{\mathbf{x}^{T}\mathbf{x}}
+```
+- ちなみにプログラム内で毎回 $\mathbf{v}$ を正規化していれば，分母が1になるから分子の計算だけで済む．
+- プログラミングで実装する->`power_method`
