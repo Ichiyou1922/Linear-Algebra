@@ -42,7 +42,7 @@ f(c_{1}\mathbf{u} + c_{2}\mathbf{v}) = c_{1}f(\mathbf{u}) + c_{2} f{\mathbf{v}}
 - プログラミングらしく書くと以下のようになる．
 
 ```math
-y_{i}=\sum_{j=1}^{n}\mathbf{A_{ij}}x_{j} \\qquad (i=1,...,m)
+y_{i}=\sum_{j=1}^{n}\mathbf{A_{ij}}x_{j} \qquad (i=1,...,m)
 ```
 
 ### 行列積と計算量
@@ -89,7 +89,7 @@ y_{i}=\sum_{j=1}^{n}\mathbf{A_{ij}}x_{j} \\qquad (i=1,...,m)
 
 - $\mu$ が最大固有値 $\lambda_{max}$ , $\mathbf{v}$ がその固有ベクトルに対応．
 #### もう少し詳しく
-- $n\times n$ 行列 $A$ がn個の線形独立な固有ベクトル $\mathbf{s}_{1}, ... , \mathbf{x}_{n}$ を持ち，その固有値を $\lambda_{1}, ... , \lambda_{n}$ で表す．これは絶対値の大きさ順に並んでいるとしよう．
+- $n\times n$ 行列 $A$ がn個の線形独立な固有ベクトル $\mathbf{x}_{1},\dots , \mathbf{x}_{n}$ を持ち，その固有値を $\lambda_{1}, ... , \lambda_{n}$ で表す．これは絶対値の大きさ順に並んでいるとしよう．
 ```math
 |\lambda_{1}| > |\lambda_{2}| > \dots > |\lambda_{n}|
 ```
@@ -102,7 +102,7 @@ y_{i}=\sum_{j=1}^{n}\mathbf{A_{ij}}x_{j} \\qquad (i=1,...,m)
 2. Aを1回掛ける
 ```math
 \begin{equation}
-\mathbf{v}^{(1)}=\mathbf{A}\mathbf{v}^{(0)}=c_{1}\mathbf{A}\mathbf{x}_{1} + \dots + c_{n}\mathbf{A}\mathbf{x}_{n}
+\mathbf{v}^{(1)}=\mathbf{A}\mathbf{v}^{(0)}=c_{1}\mathbf{A}\mathbf{x}_{1} + \dots + c_{n}\mathbf{A}\mathbf{x}_{n} \\
 &=c_{1}\lambda_{1}\mathbf{x}_{1} + \dots + c_{n}\lambda_{n}\mathbf{x}_{n}
 \end{equation}
 ```
@@ -116,7 +116,7 @@ y_{i}=\sum_{j=1}^{n}\mathbf{A_{ij}}x_{j} \\qquad (i=1,...,m)
 c_{2}(\frac{\lambda_{2}}{\lambda_{1}})^{k}\mathbf{x}_{2}+ \dots +
 c_{n}(\frac{\lambda_{n}}{\lambda_{1}})^{k}\mathbf{x}_{n}
 ```
-- $|frac{\lambda_{i}}{\lambda_{1}}|< 1 $ だから，何乗もしていくと0に近づく．
+- $|\frac{\lambda_{i}}{\lambda_{1}}|< 1$ だから，何乗もしていくと0に近づく．
 ```math
 \mathbf{v}^{(k)}\approx \lambda_{1}^kc_{1}\mathbf{x}_{1}
 ```
@@ -130,7 +130,7 @@ c_{n}(\frac{\lambda_{n}}{\lambda_{1}})^{k}\mathbf{x}_{n}
 ```
 
 - なぜ内積の商？
-  - $\maathbf{A}\mathbf{x}=\lambda\mathbf{x}$ を見ると，$\mathbf{x}$ と $\mathbf{A}\mathbf{x}$ は同じ向き->長さの比を取れば良さそう...だけどベクトル同士の割り算は定義されてない...
+  - $\mathbf{A}\mathbf{x}=\lambda\mathbf{x}$ を見ると， $\mathbf{x}$ と $\mathbf{A}\mathbf{x}$ は同じ向き->長さの比を取れば良さそう...だけどベクトル同士の割り算は定義されてない...
   - 両辺 $\mathbf{x}$ の内積を取ろう．
 ```math
 \mathbf{x}^{T}(\mathbf{A}\mathbf{x})=\mathbf{x}^{T}(\lambda\mathbf{x})
@@ -140,7 +140,7 @@ c_{n}(\frac{\lambda_{n}}{\lambda_{1}})^{k}\mathbf{x}_{n}
 ```
 - 右辺にスカラーがあるから割ると...
 ```math
-\lambda=frac{\mathbf{x}^{T}\mathbf{A}\mathbf{x}}{\mathbf{x}^{T}\mathbf{x}}
+\lambda=\frac{\mathbf{x}^{T}\mathbf{A}\mathbf{x}}{\mathbf{x}^{T}\mathbf{x}}
 ```
 - ちなみにプログラム内で毎回 $\mathbf{v}$ を正規化していれば，分母が1になるから分子の計算だけで済む．
 - プログラミングで実装する->`power_method`
