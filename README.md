@@ -164,7 +164,7 @@ c_{n}(\frac{\lambda_{n}}{\lambda_{1}})^{k}\mathbf{x}_{n}
 ```math
 \mathbf{u_{1}}=\mathbf{a_{1}}, \quad \mathbf{q_{1}}=\frac{\mathbf{u_{1}}}{||\mathbf{u_{1}}||}
 ```
-2. 第2列: $\mathbf{a_{2}}$ から $\mathbf{q_{1}}$ 方向の成分を取り除く->このベクトルは $\mathbf{q_[1]}$ に直交する．
+2. 第2列: $\mathbf{a_{2}}$ から $\mathbf{q_{1}}$ 方向の成分を取り除く->このベクトルは $\mathbf{q_{1}}$ に直交する．
 ```math
 \mathbf{u_{2}}=\mathbf{a_{2}}-(\mathbf{q_{1}}\cdot \mathbf{a_{2}})\mathbf{q_{1}}, \quad \mathbf{q_{2}}=\frac{\mathbf{u_{2}}}{||\mathbf{u_{2}}||}
 ```
@@ -178,4 +178,4 @@ c_{n}(\frac{\lambda_{n}}{\lambda_{1}})^{k}\mathbf{x}_{n}
     - $\mathbf{R_{kk}}=||\mathbf{u_{k}}||$
     - $\mathbf{R_{jk}}=\mathbf{q_{j}}\cdot \mathbf{a_{k}}\quad (j<k)$
 
-
+- 行列 $\mathbf{A}$ を受け取り， $\mathbf{Q}$ と $\mathbf{R}$ を計算するプログラムを作る->`qr_decomposition`
