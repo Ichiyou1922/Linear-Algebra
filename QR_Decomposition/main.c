@@ -33,7 +33,10 @@ Vector *create_vector(int dim) {
     printf("Failed to allocate Vector memory\n");
     exit(1);
   }
+
+  v->dim = dim;
   v->value = (double *)calloc(dim, sizeof(double));
+  
   if (v->value == NULL) {
     printf("Failed to allocate Vector value memory\n");
     free_vector(v);
@@ -48,6 +51,9 @@ Matrix *create_matrix(int rows, int cols) {
     printf("Failed to allocate Matrix memory\n");
     exit(1);
   }
+  
+  m->rows = rows;
+  m->cols = cols;
   m->value = (double *)calloc(rows * cols, sizeof(double));
   if (m->value == NULL) {
     printf("Failed to allocate Matrix value memory\n");
@@ -114,7 +120,7 @@ double norm(Vector *u) {
 }
 
 Matrix *mat_mult(Matrix *A, Matrix *B) {
-  if (A->cols != B->rows || A->rows != B->cols) {
+  if (A->cols != B->rows) {
     printf("Different size of Matrix\n");
     exit(1);
   }
@@ -122,7 +128,11 @@ Matrix *mat_mult(Matrix *A, Matrix *B) {
   for (int i = 0; i < ans->rows; i++) {
     for (int j = 0; j < ans->cols; j++) {
       for (int k = 0; k < A->cols; k++) {
-        sme(ans, i, j, gme(A, i, k) * gme(B, k, j));
+        int a = i * A->cols + k;
+        int b = k * B->cols + j;
+        int c = i * ans->cols + j;
+
+        ans->value[c] += A->value[a] * B->value[b];
       }
     }
   }
@@ -172,6 +182,19 @@ void print_matrix(Matrix *A) {
   }
 }
 
+// get inversed Matrix
+Matrix *transpose(Matrix *m) {
+  Matrix *inv = create_matrix(m->rows, m->cols);
+  for (int i = 0; i < m->rows; i++) {
+    for (int j = 0; j < m->cols; j++) {
+      int k = i * m->cols + j;
+      int l = j * inv->cols + i;
+      inv->value[l] = m->value[k];
+    }
+  }
+  return inv;
+}
+
 int main() {
   Matrix *A = create_matrix(3, 3);
   sme(A, 0, 0, 1);
@@ -190,22 +213,23 @@ int main() {
   qr_decomposition(A, Q, R);
   printf("Q\n");
   print_matrix(Q);
-  printf("n");
+  printf("R\n");
   print_matrix(R);
 
-  Matrix *QR = create_matrix(3, 3);
-  QR = mat_mult(Q, R);
+  Matrix *QR = mat_mult(Q, R);
   printf("QR\n");
   print_matrix(QR);
   
-  /*
-  Matrix *QTQ = create_matrix(3, 3);
-  QTQ = mat_mult(Q)
-  */
+  Matrix *QT = transpose(Q);
+  Matrix *QTQ = mat_mult(QT, Q);
+  printf("QTQ\n");
+  print_matrix(QTQ);
+  
   free_matrix(A);
   free_matrix(Q);
   free_matrix(R);
   free_matrix(QR);
-  //free_matrix(QTQ);
+  free_matrix(QT);
+  free_matrix(QTQ);
   return 0;
 }
