@@ -77,13 +77,21 @@ void smc(Matrix *Q, int j, Vector *q) {
   }
 }
 
-// get matrix element col
+// get matrix col
 void gmec_over(Vector *u, Matrix *A, int col) {
   for (int i = 0; i < A->rows; i++) {
     int k = i * A->cols + col;
     u->value[i] = A->value[k];
   }
 }
+
+// get matrix element
+double gme(Matrix *A, int row, int col) {
+  double ans = 0;
+  int k = row * A->cols + col;
+  ans = A->value[k];
+  return ans;
+}  
 
 double inner_product(Vector *q, Vector *a) {
   if (q->dim != a->dim) {
@@ -111,13 +119,10 @@ Matrix *mat_mult(Matrix *A, Matrix *B) {
     exit(1);
   }
   Matrix *ans = create_matrix(A->rows, B->cols);
-  for (int i = 0; i < A->rows; i++) {
-    for (int k = 0; k < i; k++) {
-      for (int j = 0; j < A->cols; j++) {
-        int l = i * A->cols + j;
-        int m = j * B->cols + k;
-        int s = i * ans->cols + k;
-        ans->value[s] += A->value[l] * B->value[m];
+  for (int i = 0; i < ans->rows; i++) {
+    for (int j = 0; j < ans->cols; j++) {
+      for (int k = 0; k < A->cols; k++) {
+        sme(ans, i, j, gme(A, i, k) * gme(B, k, j));
       }
     }
   }
@@ -128,33 +133,31 @@ void qr_decomposition(Matrix *A, Matrix *Q, Matrix *R) {
   int n = A->rows;
   int m = A->cols;
 
-  Vector *u = create_vector(A->rows);
-  Vector *a = create_vector(A->rows);
-  Vector *q_col = create_vector(A->rows);
-  Vector *norm_q = create_vector(A->rows);
+  Vector *u = create_vector(n);
+  Vector *q_col = create_vector(n);
   double r = 0;
 
   for (int k = 0; k < A->cols; k++) {
     gmec_over(u, A, k);
     
-    for (int i = 0; i < u->dim; i++) {
-      u->value[i] = a->value[i];
-    }
-
-    q->value[k] = u->value[k] / norm(u);
     for (int j = 0; j < k; j++) {
-      r = inner_product(q, a);
+      gmec_over(q_col, Q, j);
+      double r = inner_product(q_col, u);
       sme(R, j, k, r);
-      u->value[k] -=  r * q->value[j];
+
+      for (int i = 0; i < n; i++) {
+        u->value[i] -= r * q_col->value[i];
+      }
     }
-    norm_q->value[k] = q->value[k] / norm(q);
-    sme(R, k, k, norm(u));
-    smc(Q, k, norm_q);
+    double u_norm = norm(u);
+    sme(R, k, k, u_norm);
+
+    for (int i = 0; i < n; i++) {
+      sme(Q, i, k, u->value[i] / u_norm);
+    }
   }
   free_vector(u);
-  free_vector(a);
-  free_vector(q);
-  free_vector(norm_q);
+  free_vector(q_col);
 }
 
 void print_matrix(Matrix *A) {
