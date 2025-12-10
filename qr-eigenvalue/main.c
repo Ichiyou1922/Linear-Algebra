@@ -197,7 +197,7 @@ Matrix *transpose(Matrix *m) {
 
 // QR-Method
 Matrix *QR_Method(Matrix *A, Matrix *Q, Matrix *R, int max_iter) {
-  Matrix *A_new = create_matrix(A->rows, A->cols);
+  Matrix *A_new;
   for (int n = 0; n < max_iter; n++) {
     qr_decomposition(A, Q, R);
     A_new = mat_mult(R, Q);
